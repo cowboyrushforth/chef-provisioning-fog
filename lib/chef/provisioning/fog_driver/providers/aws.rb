@@ -167,8 +167,13 @@ module FogDriver
       end
 
       def convergence_strategy_for(machine_spec, machine_options)
-        machine_options[:convergence_options] ||= {}
-        machine_options[:convergence_options][:ohai_hints] = { 'ec2' => ''}
+        if machine_options.respond_to?(:configs)
+          machine_options.configs << {
+            :convergence_options => { :ohai_hints => { 'ec2' => ''} } }
+        else
+          machine_options[:convergence_options] ||= {}
+          machine_options[:convergence_options][:ohai_hints] = { 'ec2' => ''}
+        end
         super(machine_spec, machine_options)
       end
 
